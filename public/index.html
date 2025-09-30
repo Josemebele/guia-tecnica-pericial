@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guía Técnica Pericial</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Open+Sans&display=swap" rel="stylesheet" />
+  <!-- Iconos de Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #f8f8f3;
+      background-image: url('images/fondo-patron.png');
+      background-repeat: repeat;
+      background-size: auto;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    .navbar {
+      background-color: #9DA588;
+    }
+
+    .navbar-brand,
+    .nav-link,
+    .navbar-toggler-icon {
+      color: white !important;
+    }
+
+    .navbar-logo {
+      height: 45px;
+      margin-right: 12px;
+    }
+
+    .nav-user {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-user i {
+      font-size: 1.2rem;
+    }
+
+    .section {
+      padding: 60px 20px;
+    }
+
+    #inicio {
+      padding-top: 120px;
+    }
+
+    .bg-olive {
+      background-color: #9DA588;
+      color: #f8f8f3;
+    }
+
+    .btn-custom {
+      background-color: #f8f8f3;
+      color: #9DA588;
+      border: 1px solid #9DA588;
+    }
+
+    .btn-custom:hover {
+      background-color: #dce0cd;
+      color: #5f654d;
+    }
+
+    .titulo-portada {
+      font-family: 'Merriweather', serif;
+      font-size: 2.8rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #f8f8f3;
+    }
+
+    .subtitulo-portada {
+      font-weight: bold;
+      color: #f8f8f3;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+    }
+
+    .descripcion-portada {
+      color: #f8f8f3;
+      font-size: 1rem;
+      text-align: justify;
+    }
+
+    .book-container {
+      max-width: 1000px;
+      width: 100%;
+      height: 500px;
+      perspective: 2000px;
+      display: flex;
+      justify-content: center;
+      border-radius: 10px;
+      margin: 50px auto 100px auto;
+      position: relative;
+    }
+
+    .book-flip {
+      width: 100%;
+      height: 100%;
+      max-width: 1000px;
+      min-height: 390px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 1s ease;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      border-radius: 10px;
+    }
+
+    .book-flip:hover {
+      transform: scale(0.98) rotateX(0deg);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    .book-flip.open {
+      transform: rotateX(-180deg);
+      border-radius: 10px;
+    }
+
+    .book-front,
+    .book-back {
+      height: 300px;
+      min-height: 300px;
+      font-size: 1.05rem;
+      padding: 40px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .book-front {
+      background-color: #9DA588;
+      background-image: url('images/fondo-patron3.png');
+      background-repeat: repeat;
+      background-size: auto;
+      color: #f8f8f3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Merriweather', serif;
+      font-size: 1.6rem;
+      font-weight: bold;
+      text-align: center;
+      border-radius: 10px;
+    }
+
+    .book-back {
+      background-color: #ffffff;
+      color: #333;
+      transform: rotateX(180deg);
+      display: flex;
+      gap: 20px;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-radius: 10px;
+      width: 100%;
+      flex-wrap: wrap;
+      overflow: hidden;
+      box-sizing: border-box;
+      min-height: 390px;
+    }
+
+    .page h4 {
+      color: #6e6651;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .contacto-bg {
+      background-color: rgba(248, 248, 243, 0.87);
+      border: 1px solid #9DA588;
+      background-image: url('images/logo_icon.png');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: 120px auto;
+      background-blend-mode: lighten;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#inicio">
+        <img src="images/logo_icon.png" alt="Logo" class="navbar-logo">
+        Guía Pericial
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="#introduccion">Introducción</a></li>
+          <li class="nav-item"><a class="nav-link" href="#guia">Guía Técnica</a></li>
+          <li class="nav-item"><a class="nav-link" href="#cursos">Registro</a></li>
+          <li class="nav-item"><a class="nav-link" href="#nosotros">Sobre Nosotros</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+
+          <!-- Dinámico -->
+          <li class="nav-item" id="login-item">
+            <a class="nav-link" href="login.html">Iniciar Sesión</a>
+          </li>
+          <li class="nav-item d-none" id="usuario-item">
+            <span class="nav-link nav-user"><i class="bi bi-person-circle"></i><span id="usuario-nombre"></span></span>
+          </li>
+          <li class="nav-item d-none" id="zona-privada-item">
+            <a class="nav-link" href="zona-privada.html">Zona Privada</a>
+          </li>
+          <li class="nav-item d-none" id="cerrar-sesion-item">
+            <a class="nav-link" href="#" onclick="cerrarSesion()">Cerrar Sesión</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section id="inicio" class="section text-center bg-olive" data-aos="fade-up">
+    <div class="container">
+      <h1 class="titulo-portada">Guía Técnica Pericial</h1>
+      <p class="subtitulo-portada">Procedimientos Periciales para Redacción de Informes de Responsabilidad Civil: RC
+        Explotación y RC Patronal - 2024</p>
+      <p class="descripcion-portada">Guía básica de procedimientos y protocolos técnicos para redacción de informes
+        periciales orientada a aseguradoras o similares para coberturas básicas de lesiones por R.C. Explotación y R.C.
+        Patronal accidentes de trabajo.<br><strong>Rafael Cámbara Abad</strong></p>
+    </div>
+  </section>
+
+  <section id="introduccion" class="section" data-aos="fade-up">
+    <div class="container text-center mb-4 d-none" id="acceso-zona-privada">
+      <a href="zona-privada.html" class="btn btn-custom">Acceso a Zona Privada</a>
+    </div>
+    <div class="book-container">
+      <div class="book-flip" onclick="this.classList.toggle('open')">
+        <div class="book-front">INTRODUCCION</div>
+        <div class="book-back">
+          <div class="page">
+            <h4>¿Qué es un riesgo asegurador?</h4>
+            <p>Un riesgo es un suceso fortuito que causa una necesidad económica cubierta por la póliza, generando
+              indemnizaciones. Su gestión implica analizar la probabilidad y consecuencias de eventos adversos.</p>
+            <p>Este principio aplica tanto a trabajadores como a terceros afectados por la actividad de una empresa
+              asegurada.</p>
+          </div>
+          <div class="page">
+            <h4>Responsabilidad Civil</h4>
+            <p>La RC, tanto en modalidad Explotación como Patronal, requiere análisis pericial para determinar si hubo
+              fallos en prevención. Esta guía ayuda a estructurar dicho análisis con criterios normativos y técnicos.
+            </p>
+            <p><strong>RC Explotación:</strong> Actividades y sus riesgos con lesiones.<br><strong>RC Patronal:</strong>
+              Accidentes laborales con consecuencias de lesiones corporales y legales.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="guia" class="section" data-aos="fade-right">
+    <div class="container d-flex flex-column flex-md-row align-items-center gap-4">
+      <img src="images/guia.png" alt="Icono Guía Técnica" style="width: 100px; height: auto;" />
+      <div>
+        <h2>La Guía Técnica</h2>
+        <p>Contenido, estructura y beneficios de nuestra guía especializada para profesionales periciales.</p>
+        <a href="guia.html" class="btn btn-custom">Contenido de la Guía</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="cursos" class="section bg-olive" data-aos="fade-left">
+    <div class="container d-flex flex-column flex-md-row align-items-center gap-4">
+      <img src="images/cursos.png" alt="Icono Cursos" style="width: 100px; height: auto;" />
+      <div>
+        <h2>Obtener la guia</h2>
+        <p>Explora los cursos disponibles basados en nuestra guía técnica.</p>
+        <a href="cursos.html" class="btn btn-custom">Regístrate</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="nosotros" class="section" data-aos="zoom-in">
+    <div class="container d-flex flex-column flex-md-row align-items-center gap-4">
+      <img src="images/nosotros.png" alt="Icono Sobre Nosotros" style="width: 100px; height: auto;" />
+      <div>
+        <h2>Sobre Nosotros</h2>
+        <p>Conoce al equipo que respalda esta guía y los cursos disponibles.</p>
+        <a href="nosotros.html" class="btn btn-custom">Sobre Nosotros</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto" class="section bg-olive text-center" data-aos="fade-up">
+    <div class="container">
+      <h2>Soporte</h2>
+      <p>¿Tienes algun problema con la pagina o con la inscripcion?</p>
+      <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#contactoModal">Contáctanos</button>
+    </div>
+  </section>
+
+  <div class="modal fade" id="contactoModal" tabindex="-1" aria-labelledby="contactoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content contacto-bg">
+        <div class="modal-header" style="background-color: #9DA588;">
+          <h5 class="modal-title text-white" id="contactoModalLabel">Contacto</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body" style="color: #333;">
+          <p><strong>Email:</strong> jm.clbtech@gmail.com</p>
+          <p><strong>Instagram:</strong> @guiatecnica</p>
+          <p><strong>Teléfono:</strong> 666103226 <br><em>(de 18:30 a 20:30)</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init();</script>
+  <script>
+    (function () {
+      let raw = localStorage.getItem('usuarioAutenticado');
+      let user = null;
+      try { user = raw ? JSON.parse(raw) : null; } catch { user = raw || null; }
+
+      const loginItem = document.getElementById('login-item');
+      const usuarioItem = document.getElementById('usuario-item');
+      const zonaPrivadaItem = document.getElementById('zona-privada-item');
+      const cerrarSesionItem = document.getElementById('cerrar-sesion-item');
+      const usuarioNombre = document.getElementById('usuario-nombre');
+      const accesoPrivadoBtn = document.getElementById('acceso-zona-privada');
+
+      if (user) {
+        loginItem.classList.add('d-none');
+        usuarioItem.classList.remove('d-none');
+        zonaPrivadaItem.classList.remove('d-none');
+        cerrarSesionItem.classList.remove('d-none');
+        accesoPrivadoBtn.classList.remove('d-none');
+        usuarioNombre.textContent = `Hola, ${user.nombre || ''} ${user.apellido || ''}`.trim();
+      } else {
+        loginItem.classList.remove('d-none');
+        usuarioItem.classList.add('d-none');
+        zonaPrivadaItem.classList.add('d-none');
+        cerrarSesionItem.classList.add('d-none');
+        accesoPrivadoBtn.classList.add('d-none');
+      }
+    })();
+
+    function cerrarSesion() {
+      localStorage.removeItem('usuarioAutenticado');
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>
+
+
