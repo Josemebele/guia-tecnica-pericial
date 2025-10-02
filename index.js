@@ -14,49 +14,56 @@ const Inscripcion = require('./models/Inscripcion');
 
 const app = express();
 
-/* ===========================
-   Middlewares base
-=========================== */
-// ✅ CORS abierto para desarrollo/local.
-//   (Evita bloqueos del navegador al llamar al backend desde otra URL/puerto)
+/* =================================
+   Base: proxy, CORS, parsers, estáticos
+================================= */
+// Confía en el proxy (Render) para detectar https correctamente
+app.set('trust proxy', 1);
+
+// CORS abierto (útil en local y simple en prod si front/back mismo dominio)
 app.use(cors());
 
 // Parseo de JSON y formularios
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // útil para <form> application/x-www-form-urlencoded
 
-/* ===========================
-   Rutas
-=========================== */
-app.use('/', comprobantesRouter);
-app.use('/', consultasRouter);
-
 // Archivos estáticos (gracias.html, verificado.html, etc.)
 app.use(express.static(path.join(__dirname, 'public')));
 
-/* ===========================
+// Healthcheck para diagnósticos rápidos
+app.get('/health', (req, res) => res.status(200).send('OK'));
+
+/* =================================
+   Rutas de la app
+================================= */
+app.use('/', comprobantesRouter);
+app.use('/', consultasRouter);
+
+/* =================================
    Conexión a MongoDB
-=========================== */
+================================= */
+mongoose.set('strictQuery', true);
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ Conectado a MongoDB'))
   .catch(err => console.error('❌ Error de conexión:', err));
 
-/* ===========================
-   Correo para registro/verificación
-=========================== */
-// Nota: aquí usas EMAIL_FROM/EMAIL_PASS con servicio 'gmail'.
-// Si luego cambias a SMTP_*, adapta este transporter igual que en tus otras rutas.
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_FROM,
-    pass: process.env.EMAIL_PASS
-  }
+/* =================================
+   Transporter SMTP (Yahoo/Gmail/otro)
+================================= */
+// Usa siempre SMTP por variables de entorno.
+// Para Yahoo: host=smtp.mail.yahoo.com / port=587 / user=correo@yahoo.es / pass=APP_PASSWORD (sin espacios)
+const mailTransporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,                            // p.ej. smtp.mail.yahoo.com
+  port: Number(process.env.SMTP_PORT || 587),
+  secure: false,                                          // true si usas 465
+  auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+  // opcional:
+  // tls: { rejectUnauthorized: false }
 });
 
-/* ===========================
+/* =================================
    Registro (envío de verificación)
-=========================== */
+================================= */
 app.post('/send', async (req, res) => {
   const { nombre, apellido, correo, contrasena, direccion, ciudad, cp, pais } = req.body;
 
@@ -87,11 +94,16 @@ app.post('/send', async (req, res) => {
 
     await nuevaInscripcion.save();
 
-    const base = (process.env.FRONTEND_URL || 'http://localhost:3001').replace(/\/+$/, '');
+    // Construcción robusta de la URL base
+    const envBase = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/+$/, '') : null;
+    const proto   = (req.headers['x-forwarded-proto'] || req.protocol || 'http').split(',')[0].trim();
+    const host    = req.get('host');
+    const base    = envBase || `${proto}://${host}`;
+
     const link = `${base}/verificar?token=${token}`;
 
-    const mailOptions = {
-      from: `"Guía Técnica Pericial" <${process.env.EMAIL_FROM}>`,
+    await mailTransporter.sendMail({
+      from: `"Guía Técnica Pericial" <${process.env.EMAIL_FROM || process.env.SMTP_USER}>`,
       to: correo,
       subject: 'Verifica tu correo',
       html: `
@@ -100,9 +112,8 @@ app.post('/send', async (req, res) => {
         <a href="${link}">${link}</a>
         <br><br><small>Este mensaje es automático, por favor no respondas.</small>
       `
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Correo de verificación enviado correctamente.' });
 
   } catch (err) {
@@ -111,9 +122,9 @@ app.post('/send', async (req, res) => {
   }
 });
 
-/* ===========================
+/* =================================
    Verificación de email
-=========================== */
+================================= */
 app.get('/verificar', async (req, res) => {
   const { token } = req.query;
   if (!token) return res.status(400).send('Token inválido.');
@@ -133,9 +144,9 @@ app.get('/verificar', async (req, res) => {
   }
 });
 
-/* ===========================
+/* =================================
    Login
-=========================== */
+================================= */
 app.post('/login', async (req, res) => {
   const { correo, contrasena } = req.body;
 
@@ -170,9 +181,9 @@ app.post('/login', async (req, res) => {
   }
 });
 
-/* ===========================
+/* =================================
    Middleware de errores Multer
-=========================== */
+================================= */
 app.use((err, req, res, next) => {
   if (err && err.code === 'LIMIT_FILE_SIZE') {
     return res.status(413).send('Archivo demasiado grande.');
@@ -180,12 +191,13 @@ app.use((err, req, res, next) => {
   if (err && err.message?.includes('Formato no permitido')) {
     return res.status(400).send('Formato no permitido. Sube PDF, imagen o TXT.');
   }
+  console.error('❌ Error global:', err);
   next(err);
 });
 
-/* ===========================
+/* =================================
    Arranque del servidor
-=========================== */
+================================= */
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log('🚀 Servidor backend corriendo en http://localhost:' + PORT);
