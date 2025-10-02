@@ -100,7 +100,7 @@
     <div class="card mt-4">
       <div class="card-header">Consulta gratuita (texto corto)</div>
       <div class="card-body">
-        <form action="http://localhost:3001/consultas/gratis" method="POST">
+        <form action="/consultas/gratis" method="POST">
           <div class="mb-3 text-start">
             <label class="form-label">Nombre completo</label>
             <input type="text" name="nombre" class="form-control" required>
@@ -131,7 +131,7 @@
     <div class="card mt-4">
       <div class="card-header">Consulta personalizada (previo presupuesto)</div>
       <div class="card-body">
-        <form action="http://localhost:3001/consultas/presupuesto" method="POST" enctype="multipart/form-data">
+        <form action="/consultas/presupuesto" method="POST" enctype="multipart/form-data">
           <div class="mb-3 text-start">
             <label class="form-label">Nombre completo</label>
             <input type="text" name="nombre" class="form-control" required>
@@ -164,7 +164,7 @@
     <div class="card mt-4">
       <div class="card-header">Enviar comprobante de pago</div>
       <div class="card-body">
-        <form action="http://localhost:3001/enviar-comprobante" method="POST" enctype="multipart/form-data">
+        <form action="/enviar-comprobante" method="POST" enctype="multipart/form-data">
           <div class="mb-3 text-start">
             <label class="form-label">Nombre completo</label>
             <input type="text" name="nombre" class="form-control" required>
